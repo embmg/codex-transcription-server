@@ -5,7 +5,6 @@ import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
 import fs from "node:fs";
 import os from "node:os";
-import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 
 dotenv.config();
@@ -22,6 +21,21 @@ if (!API_KEY) {
 
 app.disable("x-powered-by");
 app.use(helmet());
+
+app.get("/", (_req, res) => {
+    res.status(200).json({
+        service: "Compêndio Codex - Servidor de Transcrição",
+        status: "online",
+        health: "/health"
+    });
+});
+
+app.get("/health", (_req, res) => {
+    res.status(200).json({
+        status: "online",
+        service: "codex-transcription-server"
+    });
+});
 
 const limiteRequisicoes = rateLimit({
     windowMs: 60 * 60 * 1000,
@@ -145,10 +159,6 @@ async function aguardarTranscricao(transcriptId) {
     throw new Error("O processamento ultrapassou o tempo limite.");
 }
 
-app.get("/health", (_req, res) => {
-    res.json({ status: "online" });
-});
-
 app.post(
     "/api/transcribe",
     limiteRequisicoes,
@@ -211,4 +221,4 @@ const servidor = app.listen(PORT, "0.0.0.0", () => {
 
 servidor.requestTimeout = 0;
 servidor.timeout = 0;
-servidor.headersTimeout = 60000;
+servidor.headersTimeout = 60000;w
