@@ -122,7 +122,7 @@ async function solicitarTranscricao(audioUrl) {
             body: JSON.stringify({
                 audio_url: audioUrl,
                 speech_models: [
-                    "universal-3-pro",
+                    "universal-3-5-pro",
                     "universal-2"
                 ],
                 language_detection: true,
